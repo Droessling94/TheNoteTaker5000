@@ -37,18 +37,15 @@ const getNotes = () =>
     },    
   })
   .then(function (data){ 
-    console.log(jsonNotes);
      return data.json();
   })
   .then(function (data){ 
     jsonNotes = data
-    console.log(jsonNotes);
     return jsonNotes;
   })
 //at some point the promise doesnt actually get sent over to render note list.
   // Render the list of note titles
 const renderNoteList = () => {
-  console.log(jsonNotes);
   if (window.location.pathname === '/notes') {
     noteList.forEach((el) => (el.innerHTML = ''));
   }
