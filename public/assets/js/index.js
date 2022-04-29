@@ -47,9 +47,8 @@ const getNotes = () =>
   })
 //at some point the promise doesnt actually get sent over to render note list.
   // Render the list of note titles
-const renderNoteList = (notes) => {
-console.log(jsonNotes);
-  console.log(notes + " this is @ renderNoteList 125");;
+const renderNoteList = () => {
+  console.log(jsonNotes);
   if (window.location.pathname === '/notes') {
     noteList.forEach((el) => (el.innerHTML = ''));
   }
@@ -103,27 +102,41 @@ console.log(jsonNotes);
 
 
   
-
-
-
+const saveNote = (note) =>
+fetch("/api/notes", {
+  "method": "POST",
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "body": `${note}`
+})
+.then(response => {
+  console.log(response);
+  console.log(note);
+})
+.catch(err => {
+  console.error(err);
+});
   
 
-const saveNote = (note) =>
-  fetch('/api/notes', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(note),
-  });
+// const saveNote = (note) =>
+//   fetch('/api/notes', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: note,
+//   })
+//   .then((response) => response.json())
 
-const deleteNote = (id) =>
-  fetch(`/api/notes/${id}`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+
+// const deleteNote = (id) =>
+//   fetch(`/api/notes/${id}`, {
+//     method: 'DELETE',
+//     headers: {
+// //       'Content-Type': 'application/json',
+// //     },
+//   });
 
 const renderActiveNote = () => {
   hide(saveNoteBtn);
@@ -141,12 +154,24 @@ const renderActiveNote = () => {
   }
 };
 
+class Note {
+  constructor(title, text) {
+    this.title = title;
+    this.text = text;
+  }
+}
+
 const handleNoteSave = () => {
-  const newNote = {
-    title: noteTitle.value,
-    text: noteText.value,
-  };
-  saveNote(newNote).then(() => {
+  
+  let noteTitleVal = noteTitle.value;
+  let noteTextVal = noteText.value;
+  console.log(noteTitleVal);
+  console.log(noteTextVal);
+  let newNote = { "title": noteTitleVal, "text": noteTextVal};
+
+  // console.log(noteTitle.value + " this is the value of the title after new note");
+  console.log(JSON.stringify(newNote) + " this is new note at buttonclick");
+  saveNote(JSON.stringify(newNote)).then(() => {
     getAndRenderNotes();
     renderActiveNote();
   });
